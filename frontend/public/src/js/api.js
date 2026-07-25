@@ -1,6 +1,6 @@
 // Shree ERP - API Client wrapper
 
-const BASE_URL = window.location.origin.startsWith('file') || !window.location.origin.includes('5000') 
+const BASE_URL = window.location.origin.startsWith('file') || window.location.origin.includes('5500') || window.location.origin.includes('3000')
   ? 'http://localhost:5000' 
   : window.location.origin;
 
