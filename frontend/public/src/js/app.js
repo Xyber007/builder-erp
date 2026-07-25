@@ -4,9 +4,9 @@ const app = {
   activePage: 'dashboard',
   currentProject: 'project-1',
 
-  init: () => {
+  init: async () => {
     // 1. Check Authenticated State
-    app.checkAuth();
+    await app.checkAuth();
 
     // 2. Setup Event Listeners
     app.setupListeners();
@@ -20,37 +20,42 @@ const app = {
     document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', dateOpts);
   },
 
-  checkAuth: () => {
+  checkAuth: async () => {
     let token = localStorage.getItem('token');
     let userStr = localStorage.getItem('user');
 
-    if (!token || !userStr) {
-      // Auto-bypass login: seed Super Admin credentials
-      localStorage.setItem('token', 'bypass-token-super-admin');
-      localStorage.setItem('user', JSON.stringify({
-        id: 'user-id-1',
-        name: 'Super Admin User',
-        email: 'admin@shree.com',
-        role: 'Super Admin'
-      }));
-      token = 'bypass-token-super-admin';
-      userStr = JSON.stringify({
-        id: 'user-id-1',
-        name: 'Super Admin User',
-        email: 'admin@shree.com',
-        role: 'Super Admin'
-      });
+    if (!token || !userStr || token === 'bypass-token-super-admin') {
+      // Auto-bypass login: fetch a genuine JWT signed token in the background
+      try {
+        const targetUrl = window.location.origin.startsWith('file') || !window.location.origin.includes('5000') ? 'http://localhost:5000' : window.location.origin;
+        const res = await fetch(`${targetUrl}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'admin@shree.com', password: 'password123' })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          token = data.token;
+          userStr = JSON.stringify(data.user);
+        }
+      } catch (err) {
+        console.error('Automatic cloud login failed:', err);
+      }
     }
 
-    const user = JSON.parse(userStr);
-    const loginContainer = document.getElementById('login-container');
-    if (loginContainer) loginContainer.classList.remove('active');
-    
-    const appContainer = document.getElementById('app-container');
-    if (appContainer) appContainer.classList.remove('hidden');
-    
-    document.getElementById('user-display-name').innerText = user.name;
-    document.getElementById('user-display-role').innerText = user.role;
+    if (token && userStr) {
+      const user = JSON.parse(userStr);
+      const loginContainer = document.getElementById('login-container');
+      if (loginContainer) loginContainer.classList.remove('active');
+      
+      const appContainer = document.getElementById('app-container');
+      if (appContainer) appContainer.classList.remove('hidden');
+      
+      document.getElementById('user-display-name').innerText = user.name;
+      document.getElementById('user-display-role').innerText = user.role;
+    }
   },
 
   setupListeners: () => {
