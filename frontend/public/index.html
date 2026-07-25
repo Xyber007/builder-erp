@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shree Enterprises ERP - Builder Construction MIS</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN for beautiful visual analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="src/css/styles.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- MAIN APP LAYER -->
+  <!-- ========================================== -->
+  <div id="app-container">
+    
+    <!-- Collapsible Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <i class="fa-solid fa-helmet-safety logo-brand-icon"></i>
+          <span>Shree ERP</span>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-toggle-btn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="user-profile-badge">
+        <div class="user-avatar">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="user-details">
+          <h4 id="user-display-name">Admin User</h4>
+          <span id="user-display-role" class="badge badge-role">Super Admin</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">
+          <i class="fa-solid fa-chart-line"></i> <span>Dashboard</span>
+        </a>
+        <a href="#units" class="nav-item" data-page="units">
+          <i class="fa-solid fa-cubes"></i> <span>Unit Inventory</span>
+        </a>
+        <a href="#customers" class="nav-item" data-page="customers">
+          <i class="fa-solid fa-user-group"></i> <span>Customers</span>
+        </a>
+        <a href="#payments" class="nav-item" data-page="payments">
+          <i class="fa-solid fa-indian-rupee-sign"></i> <span>Payments</span>
+        </a>
+        <a href="#construction" class="nav-item" data-page="construction">
+          <i class="fa-solid fa-trowel-bricks"></i> <span>Construction</span>
+        </a>
+        <a href="#demands" class="nav-item" data-page="demands">
+          <i class="fa-solid fa-file-invoice"></i> <span>Billing Demands</span>
+        </a>
+        <a href="#reports" class="nav-item" data-page="reports">
+          <i class="fa-solid fa-file-invoice-dollar"></i> <span>Reports Hub</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="theme-toggle" class="btn-theme-toggle">
+          <i class="fa-solid fa-sun"></i> <span>Light Mode</span>
+        </button>
+        <button id="logout-btn" class="btn-logout">
+          <i class="fa-solid fa-power-off"></i> <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top navbar with global search -->
+      <header class="top-nav">
+        <div class="search-bar-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="global-search" placeholder="Global Search (Customer Name, Unit #, Mobile, PAN, Receipt...)...">
+          <div id="search-results-dropdown" class="search-results-dropdown hidden"></div>
+        </div>
+        <div class="top-nav-actions">
+          <div class="project-selector-wrapper">
+            <label for="global-project-select"><i class="fa-solid fa-city pr-1"></i> Project:</label>
+            <select id="global-project-select">
+              <option value="project-1">Meraki Studio Baner</option>
+            </select>
+          </div>
+          <div class="notifications-bell">
+            <i class="fa-regular fa-bell"></i>
+            <span class="pulse-dot"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ========================================== -->
+      <!-- VIEW: HOME DASHBOARD -->
+      <!-- ========================================== -->
+      <section id="page-dashboard" class="app-page active">
+        <div class="page-title-row">
+          <div>
+            <h1>Executive Dashboard</h1>
+            <p id="dashboard-project-name">Meraki Studio Baner</p>
+          </div>
+          <div class="date-badge">
+            <i class="fa-regular fa-calendar"></i> <span id="current-date-display">July 25, 2026</span>
+          </div>
+        </div>
+
+        <!-- Upper Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card glass">
+            <div class="stat-icon-row bg-blue">
+              <i class="fa-solid fa-cubes"></i>
+              <span class="trend positive">100% Total</span>
+            </div>
+            <h3>Total Units</h3>
+            <h2 id="dash-stat-total-units">45</h2>
+            <div class="stat-footer">
+              <span id="dash-stat-avail-units">25 Available</span> | <span id="dash-stat-booked-units">20 Booked</span>
+            </div>
+          </div>
+
+          <div class="stat-card glass">
+            <div class="stat-icon-row bg-green">
+              <i class="fa-solid fa-handshake"></i>
+              <span class="trend positive" id="dash-stat-booked-pct">44%</span>
+            </div>
+            <h3>Booked Units</h3>
+            <h2 id="dash-stat-booked-count">20</h2>
+            <div class="stat-footer">
+              <span id="dash-stat-agreed-count">15 Agreements</span> | <span id="dash-stat-reg-count">10 Registered</span>
+            </div>
+          </div>
+
+          <div class="stat-card glass">
+            <div class="stat-icon-row bg-yellow">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+              <span class="trend">Sales Pipeline</span>
+            </div>
+            <h3>Sales Value</h3>
+            <h2 id="dash-stat-sales-value">₹0</h2>
+            <div class="stat-footer">
+              <span>All active bookings value</span>
+            </div>
+          </div>
+
+          <div class="stat-card glass">
+            <div class="stat-icon-row bg-purple">
+              <i class="fa-solid fa-wallet"></i>
+              <span class="trend positive" id="dash-stat-collection-pct">0%</span>
+            </div>
+            <h3>Collections Received</h3>
+            <h2 id="dash-stat-collections-value">₹0</h2>
+            <div class="stat-footer">
+              <span id="dash-stat-outstanding-value">Outstanding: ₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Charts & Activities -->
+        <div class="dashboard-layouts-grid">
+          
+          <!-- Collection Analytics -->
+          <div class="layout-panel glass">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-chart-area"></i> Revenue & Collections</h3>
+              <div class="pill pill-green">Real-time</div>
+            </div>
+            <div class="panel-body chart-container">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Timeline -->
+          <div class="layout-panel glass">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-bolt"></i> Quick Operations</h3>
+            </div>
+            <div class="panel-body quick-actions-row">
+              <button onclick="app.showNewPaymentModal()" class="action-btn-card">
+                <div class="action-btn-icon bg-green"><i class="fa-solid fa-cash-register"></i></div>
+                <span>Receive Payment</span>
+              </button>
+              <button onclick="app.switchPage('units')" class="action-btn-card">
+                <div class="action-btn-icon bg-blue"><i class="fa-solid fa-building-user"></i></div>
+                <span>View Inventory Map</span>
+              </button>
+              <button onclick="app.switchPage('reports')" class="action-btn-card">
+                <div class="action-btn-icon bg-purple"><i class="fa-solid fa-file-invoice"></i></div>
+                <span>Ledger Report</span>
+              </button>
+            </div>
+            
+            <div class="panel-header border-t">
+              <h3><i class="fa-solid fa-list-check"></i> Project Milestones</h3>
+            </div>
+            <div class="panel-body">
+              <div class="milestones-progress-wrapper">
+                <div class="progress-info">
+                  <span>Construction Stage: <strong id="dash-construction-stage-name">Brick Work</strong></span>
+                  <span id="dash-construction-stage-pct">45%</span>
+                </div>
+                <div class="progress-bar-outer">
+                  <div id="dash-construction-progress-bar" class="progress-bar-inner bg-purple" style="width: 45%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-header border-t">
+              <h3><i class="fa-solid fa-cloud-arrow-up"></i> Excel Database Cloud Sync</h3>
+            </div>
+            <div class="panel-body">
+              <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">
+                Download current data as Excel workbook, edit locally, and upload back to sync in the cloud.
+              </p>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <button onclick="app.downloadExcelDb()" class="btn btn-sm btn-outline btn-block">
+                  <i class="fa-solid fa-file-excel text-green"></i> Download Excel Database
+                </button>
+                <div style="display:flex; gap:8px; align-items:center; margin-top:4px;">
+                  <input type="file" id="excel-upload-file" accept=".xlsx" style="display:none;" onchange="app.handleExcelUpload(this)">
+                  <button onclick="document.getElementById('excel-upload-file').click()" class="btn btn-sm btn-primary btn-block" style="width: 100%;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload Excel Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="layout-panel glass mt-6">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-receipt"></i> Recent Collections</h3>
+            <button onclick="app.switchPage('payments')" class="btn btn-sm btn-outline">View Ledger Book</button>
+          </div>
+          <div class="panel-body scroll-x">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Receipt ID</th>
+                  <th>Customer Name</th>
+                  <th>Unit</th>
+                  <th>Payment Type</th>
+                  <th>Mode</th>
+                  <th>Payment Date</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="dash-recent-payments-table">
+                <!-- Programmatically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW: UNIT INVENTORY VISUAL MAP -->
+      <!-- ========================================== -->
+      <section id="page-units" class="app-page">
+        <div class="page-title-row">
+          <div>
+            <h1>Unit Inventory Map</h1>
+            <p>Interactive floor plans and real-time statuses</p>
+          </div>
+          <div class="legend-row">
+            <span class="legend-item"><span class="legend-dot status-available"></span> Available</span>
+            <span class="legend-item"><span class="legend-dot status-booked"></span> Booked</span>
+            <span class="legend-item"><span class="legend-dot status-blocked"></span> Blocked</span>
+            <span class="legend-item"><span class="legend-dot status-agreement"></span> Agreement Done</span>
+            <span class="legend-item"><span class="legend-dot status-registered"></span> Registered</span>
+            <span class="legend-item"><span class="legend-dot status-possession"></span> Possession</span>
+          </div>
+        </div>
+
+        <div id="units-visual-map" class="units-visual-map">
+          <!-- Floors will be dynamically rendered here as grid layers -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW: CUSTOMERS LIST -->
+      <!-- ========================================== -->
+      <section id="page-customers" class="app-page">
+        <div class="page-title-row">
+          <div>
+            <h1>Customer Directory</h1>
+            <p>View corporate profiles, contract status & financial summaries</p>
+          </div>
+        </div>
+
+        <div class="layout-panel glass">
+          <div class="panel-body scroll-x">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Unit</th>
+                  <th>Floor / Wing</th>
+                  <th>Mobile Number</th>
+                  <th>Booking Date</th>
+                  <th>Sales Executive</th>
+                  <th>Unit Value</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="customers-list-table">
+                <!-- Populated programmatically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW: DETAILED CUSTOMER PROFILE (HEART SCREEN) -->
+      <!-- ========================================== -->
+      <section id="page-customer-profile" class="app-page">
+        <div class="profile-back-row">
+          <button onclick="app.switchPage('customers')" class="btn btn-sm btn-outline"><i class="fa-solid fa-arrow-left"></i> Back to Directory</button>
+          <div class="profile-actions-wrapper">
+            <button onclick="customerView.openPaymentEntryModal()" class="btn btn-sm btn-primary"><i class="fa-solid fa-indian-rupee-sign"></i> Record Payment</button>
+            <button onclick="customerView.openLegalUpdateModal()" class="btn btn-sm btn-outline"><i class="fa-solid fa-file-signature"></i> Update Legal Status</button>
+          </div>
+        </div>
+
+        <!-- Upper Financial Cards Row -->
+        <div class="profile-financial-summary-grid">
+          <div class="summary-card gold">
+            <h4>Property Value</h4>
+            <h2 id="prof-fin-property-value">₹0</h2>
+            <div class="summary-card-footer">
+              <span>Booking Amt: </span><span id="prof-fin-booking-amt">₹0</span>
+            </div>
+          </div>
+          <div class="summary-card green">
+            <h4>Total Received</h4>
+            <h2 id="prof-fin-total-received">₹0</h2>
+            <div class="summary-card-footer">
+              <span id="prof-fin-pay-pct">0% Paid</span>
+            </div>
+          </div>
+          <div class="summary-card red">
+            <h4>Outstanding Balance</h4>
+            <h2 id="prof-fin-outstanding">₹0</h2>
+            <div class="summary-card-footer">
+              <span>Next Due: </span><span id="prof-fin-next-due-date">N/A</span>
+            </div>
+          </div>
+          <div class="summary-card blue">
+            <h4>Bank Loan Status</h4>
+            <h2 id="prof-fin-loan-amount">₹0</h2>
+            <div class="summary-card-footer">
+              <span>Disbursed: </span><span id="prof-fin-loan-disbursed">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Detail Split Layout -->
+        <div class="profile-details-split">
+          
+          <!-- Left Column: Customer Biodata -->
+          <div class="profile-sidebar glass">
+            <div class="profile-avatar-block">
+              <div class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <h3 id="prof-cust-name">Aditya Sharma</h3>
+              <span id="prof-cust-role-badge" class="badge status-badge-registered">Registered</span>
+            </div>
+            
+            <div class="profile-contact-details">
+              <div class="contact-item">
+                <i class="fa-solid fa-building"></i>
+                <div>
+                  <small>Unit Locked</small>
+                  <p id="prof-cust-unit">Unit 302 (Wing A, Floor 3)</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <small>Mobile Contact</small>
+                  <p id="prof-cust-phone">9123456701</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                  <small>Email Address</small>
+                  <p id="prof-cust-email">aditya.sharma@example.com</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-address-card"></i>
+                <div>
+                  <small>Tax & Identity Verification</small>
+                  <p>PAN: <strong id="prof-cust-pan">ABCDE1234F</strong><br>Aadhaar: <strong id="prof-cust-aadhaar">123456789012</strong></p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fa-solid fa-calendar-check"></i>
+                <div>
+                  <small>Important Milestones</small>
+                  <p>Booking: <span id="prof-cust-booking-date">2025-02-15</span><br>Agreement: <span id="prof-cust-agreement-date">N/A</span><br>Registration: <span id="prof-cust-registration-date">N/A</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Tabs (Ledger, Schedule, Documents, Timeline, Notes) -->
+          <div class="profile-tab-panel glass">
+            <div class="tab-headers">
+              <button class="tab-btn active" data-tab="tab-ledger"><i class="fa-solid fa-receipt"></i> Account Ledger</button>
+              <button class="tab-btn" data-tab="tab-schedule"><i class="fa-solid fa-calendar-days"></i> Milestones Schedule</button>
+              <button class="tab-btn" data-tab="tab-docs"><i class="fa-solid fa-folder-open"></i> Documents</button>
+              <button class="tab-btn" data-tab="tab-timeline"><i class="fa-solid fa-timeline"></i> Timeline</button>
+              <button class="tab-btn" data-tab="tab-notes"><i class="fa-solid fa-note-sticky"></i> CRM Notes</button>
+              <button class="tab-btn" data-tab="tab-demands"><i class="fa-solid fa-file-invoice"></i> Raised Demands</button>
+            </div>
+            
+            <div class="tab-contents-wrapper">
+              
+              <!-- TAB: LEDGER -->
+              <div id="tab-ledger" class="tab-content active">
+                <div class="ledger-header-row">
+                  <h4>Running Customer Balance Sheet</h4>
+                  <button onclick="customerView.exportLedgerPDF()" class="btn btn-sm btn-outline"><i class="fa-solid fa-file-pdf"></i> Export Ledger PDF</button>
+                </div>
+                <div class="scroll-x">
+                  <table class="data-table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Debit (Due)</th>
+                        <th>Credit (Paid)</th>
+                        <th>Receipt No</th>
+                        <th>Remarks</th>
+                        <th>Running Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customer-ledger-table-body">
+                      <!-- Rendered programmatically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- TAB: SCHEDULE -->
+              <div id="tab-schedule" class="tab-content">
+                <h4>Payment Milestones & Schedule Rules</h4>
+                <div class="scroll-x">
+                  <table class="data-table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Milestone Name</th>
+                        <th>Percentage</th>
+                        <th>Due Amount</th>
+                        <th>Received Amount</th>
+                        <th>Outstanding</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customer-schedule-table-body">
+                      <!-- Rendered programmatically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- TAB: DOCUMENTS -->
+              <div id="tab-docs" class="tab-content">
+                <div class="docs-header-row">
+                  <h4>Uploaded Customer Files Directory</h4>
+                  <button onclick="customerView.openUploadDocModal()" class="btn btn-sm btn-outline"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Document</button>
+                </div>
+                <div class="docs-grid" id="customer-docs-grid-body">
+                  <!-- Rendered programmatically -->
+                </div>
+              </div>
+
+              <!-- TAB: TIMELINE -->
+              <div id="tab-timeline" class="tab-content">
+                <h4>Customer Profile History Trail</h4>
+                <div class="timeline-trail" id="customer-timeline-trail-body">
+                  <!-- Rendered programmatically -->
+                </div>
+              </div>
+
+              <!-- TAB: NOTES -->
+              <div id="tab-notes" class="tab-content">
+                <div class="notes-input-block">
+                  <textarea id="crm-note-input" placeholder="Type internal client notes or discussion logs here..."></textarea>
+                  <button onclick="customerView.submitCrmNote()" class="btn btn-primary mt-2 float-right"><i class="fa-solid fa-paper-plane"></i> Save CRM Note</button>
+                </div>
+                <div class="notes-history-list" id="customer-notes-history-body">
+                  <!-- Rendered programmatically -->
+                </div>
+              </div>
+
+              <!-- TAB: DEMANDS -->
+              <div id="tab-demands" class="tab-content">
+                <h4>Customer Raised Demand Letters</h4>
+                <div class="scroll-x">
+                  <table class="data-table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Invoice ID</th>
+                        <th>Milestone Stage</th>
+                        <th>Due Amount</th>
+                        <th>Raised Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customer-demands-table-body">
+                      <!-- Rendered programmatically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW: PAYMENTS LEDGER BOOK -->
+      <!-- ========================================== -->
+      <section id="page-payments" class="app-page">
+        <div class="page-title-row">
+          <div>
+            <h1>Collections Journal</h1>
+            <p>Historical archive of all payments entered in the ERP system</p>
+          </div>
+          <button onclick="app.showNewPaymentModal()" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Record Payment</button>
+        </div>
+
+        <div class="layout-panel glass">
+          <div class="panel-body scroll-x">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Receipt Number</th>
+                  <th>Customer</th>
+                  <th>Unit Number</th>
+                  <th>Amount</th>
+                  <th>Payment Type</th>
+                  <th>Mode</th>
+                  <th>Transaction ID</th>
+                  <th>Date Recorded</th>
+                  <th>Entered By</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="payments-ledger-table-body">
+                <!-- Rendered programmatically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW: CONSTRUCTION MODULE -->
+      <!-- ========================================== -->
+      <section id="page-construction" class="app-page">
+        <div class="page-title-row">
+          <div>
+            <h1>Construction Progress Tracker</h1>
+            <p>Milestone progress logs for Shree Enterprises project structures</p>
+          </div>
+        </div>
+
+        <div class="construction-stages-layout">
+          <div class="layout-panel glass">
+            <div class="panel-header">
+              <h3>Current Structural Stages</h3>
+            </div>
+            <div class="panel-body" id="construction-stages-list-body">
+              <!-- Dynamically populated stages -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW: REPORTS HUB -->
+      <!-- ========================================== -->
+      <section id="page-reports" class="app-page">
+        <div class="page-title-row">
+          <div>
+            <h1>Financial Reporting Hub</h1>
+            <p>Export ledger summaries, GST audits, outstanding summaries and inventory ratios</p>
+          </div>
+        </div>
+
+        <div class="report-selection-row">
+          <button class="report-selector-btn active" onclick="reportsView.loadReport('outstanding')">
+            <i class="fa-solid fa-user-clock"></i> Outstanding Dues
+          </button>
+          <button class="report-selector-btn" onclick="reportsView.loadReport('collections')">
+            <i class="fa-solid fa-sack-dollar"></i> Collections Log
+          </button>
+          <button class="report-selector-btn" onclick="reportsView.loadReport('gst')">
+            <i class="fa-solid fa-file-invoice"></i> GST Audits
+          </button>
+          <button class="report-selector-btn" onclick="reportsView.loadReport('inventory')">
+            <i class="fa-solid fa-warehouse"></i> Inventory Stock
+          </button>
+        </div>
+
+        <div class="layout-panel glass mt-4">
+          <div class="panel-header">
+            <h3 id="report-title-display">Report Table</h3>
+            <button onclick="reportsView.exportReport()" class="btn btn-sm btn-outline"><i class="fa-solid fa-file-excel"></i> Export Report (CSV)</button>
+          </div>
+          <div class="panel-body scroll-x" id="report-display-container">
+            <!-- Rendered reports table dynamically -->
+          </div>
+        </div>
+      </section>
+ 
+      <!-- ========================================== -->
+      <!-- VIEW: BILLING DEMANDS HUB -->
+      <!-- ========================================== -->
+      <section id="page-demands" class="app-page">
+        <div class="page-title-row">
+          <div>
+            <h1>Billing Demands Center</h1>
+            <p>Raise demands, monitor aging balances, and print customer demand invoices</p>
+          </div>
+        </div>
+
+        <!-- Upper Financial Summary Cards -->
+        <div class="profile-financial-summary-grid">
+          <div class="summary-card gold">
+            <h4>Total Demands Raised</h4>
+            <h2 id="demand-stat-raised">₹0</h2>
+            <div class="summary-card-footer"><span>Aggregated invoice requests</span></div>
+          </div>
+          <div class="summary-card green">
+            <h4>Collections Received</h4>
+            <h2 id="demand-stat-collected">₹0</h2>
+            <div class="summary-card-footer"><span id="demand-stat-pct">0% Collected</span></div>
+          </div>
+          <div class="summary-card red">
+            <h4>Outstanding Invoices</h4>
+            <h2 id="demand-stat-outstanding">₹0</h2>
+            <div class="summary-card-footer"><span>Pending settlement</span></div>
+          </div>
+        </div>
+
+        <!-- Split lists: Pending billing vs Raised demands -->
+        <div class="dashboard-layouts-grid mt-6">
+          <!-- Left: Raised Demands -->
+          <div class="layout-panel glass">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-file-invoice"></i> Invoiced Demands</h3>
+            </div>
+            <div class="panel-body scroll-x">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Demand ID</th>
+                    <th>Customer</th>
+                    <th>Unit</th>
+                    <th>Milestone</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="demands-raised-table-body">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: Billing Queue -->
+          <div class="layout-panel glass">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-bell-concierge"></i> Billing Queue</h3>
+            </div>
+            <div class="panel-body">
+              <div id="demands-queue-list" style="display:flex; flex-direction:column; gap:1rem;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: RECORD PAYMENT -->
+  <!-- ========================================== -->
+  <div id="payment-modal" class="modal-overlay hidden">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-cash-register text-green"></i> Record Customer Payment</h3>
+        <button onclick="app.closePaymentModal()" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="payment-form">
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="payment-customer-select">Select Customer</label>
+            <select id="payment-customer-select" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="payment-type">Payment Category</label>
+            <select id="payment-type" required>
+              <option value="Booking">Booking Amount</option>
+              <option value="Agreement">Agreement Milestone</option>
+              <option value="Slab">Slab Casting</option>
+              <option value="Brick Work">Brick Work Stage</option>
+              <option value="Plaster">Plastering Stage</option>
+              <option value="Flooring">Flooring Stage</option>
+              <option value="Possession">Possession Handover</option>
+              <option value="Registration">Registration Stamp</option>
+              <option value="Other">Other (GST / PLC)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row mt-3">
+          <div class="form-group col-6">
+            <label for="payment-amount">Amount (INR)</label>
+            <input type="number" id="payment-amount" placeholder="₹ Enter value" min="1" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="payment-date">Date of Receipt</label>
+            <input type="date" id="payment-date" required>
+          </div>
+        </div>
+
+        <div class="form-row mt-3">
+          <div class="form-group col-6">
+            <label for="payment-mode">Payment Mode</label>
+            <select id="payment-mode" required>
+              <option value="Cash">Cash Handover</option>
+              <option value="Cheque">Physical Cheque</option>
+              <option value="UPI">UPI Transfer</option>
+              <option value="NEFT">NEFT Bank Gateway</option>
+              <option value="RTGS">RTGS Transfer</option>
+              <option value="Bank Loan">Bank Loan Disbursement</option>
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="payment-txn-no">Transaction / Cheque Number</label>
+            <input type="text" id="payment-txn-no" placeholder="TXNxxxxx / Check ID">
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="payment-bank">Drawer / Payer Bank Name</label>
+          <input type="text" id="payment-bank" placeholder="e.g. HDFC Bank, SBI Bank">
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="payment-remarks">Internal Accounts Remarks</label>
+          <textarea id="payment-remarks" placeholder="Optional notes for audit logs..."></textarea>
+        </div>
+
+        <div class="modal-footer mt-4">
+          <button type="button" onclick="app.closePaymentModal()" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Process Receipt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: LEGAL STATUS UPDATE -->
+  <!-- ========================================== -->
+  <div id="legal-modal" class="modal-overlay hidden">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-file-signature text-blue"></i> Update Customer Legal Status</h3>
+        <button onclick="app.closeModal('legal-modal')" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="legal-form">
+        <input type="hidden" id="legal-customer-id">
+        <div class="form-group">
+          <label for="legal-unit-status">Unit Inventory Status</label>
+          <select id="legal-unit-status" required>
+            <option value="Booked">Booked</option>
+            <option value="Blocked">Blocked</option>
+            <option value="Agreement Done">Agreement Done</option>
+            <option value="Registered">Registered</option>
+            <option value="Possession Given">Possession Given</option>
+          </select>
+        </div>
+        <div class="form-group mt-3">
+          <label for="legal-agreement-date">Agreement Execution Date</label>
+          <input type="date" id="legal-agreement-date">
+        </div>
+        <div class="form-group mt-3">
+          <label for="legal-registration-date">Registration Completion Date</label>
+          <input type="date" id="legal-registration-date">
+        </div>
+        <div class="form-group mt-3">
+          <label for="legal-possession-date">Possession Handover Date</label>
+          <input type="date" id="legal-possession-date">
+        </div>
+
+        <div class="modal-footer mt-4">
+          <button type="button" onclick="app.closeModal('legal-modal')" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: DOCUMENT UPLOAD -->
+  <!-- ========================================== -->
+  <div id="upload-doc-modal" class="modal-overlay hidden">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-cloud-arrow-up text-blue"></i> Upload Customer Document</h3>
+        <button onclick="app.closeModal('upload-doc-modal')" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="upload-doc-form">
+        <input type="hidden" id="upload-doc-customer-id">
+        <div class="form-group">
+          <label for="upload-doc-category">Document Category</label>
+          <select id="upload-doc-category" required>
+            <option value="PAN">PAN Card Copy</option>
+            <option value="Aadhaar">Aadhaar Card Copy</option>
+            <option value="Passport Photo">Passport Size Photograph</option>
+            <option value="Booking Form">Signed Booking Form</option>
+            <option value="Agreement">Sale Deed Agreement</option>
+            <option value="Demand Letter">Demand Letter Invoice</option>
+            <option value="Index II">Index II Document</option>
+            <option value="Possession Letter">Possession Handover Letter</option>
+            <option value="Loan Document">Bank Loan Sanction Letter</option>
+            <option value="Other">Other PDF Reference</option>
+          </select>
+        </div>
+        <div class="form-group mt-3">
+          <label for="upload-doc-file">Select File (or Snap Photo)</label>
+          <input type="file" id="upload-doc-file" accept="image/*,application/pdf;capture=camera" required>
+        </div>
+
+        <div class="modal-footer mt-4">
+          <button type="button" onclick="app.closeModal('upload-doc-modal')" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Upload File</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: RECEIPT VIEW / IN-APP PREVIEW -->
+  <!-- ========================================== -->
+  <div id="receipt-modal" class="modal-overlay hidden">
+    <div class="modal-card receipt-preview-card glass">
+      <div class="modal-header hide-on-print">
+        <h3><i class="fa-solid fa-file-invoice-dollar text-green"></i> Payment Receipt</h3>
+        <div>
+          <button onclick="window.print()" class="btn btn-sm btn-outline mr-2"><i class="fa-solid fa-print"></i> Print</button>
+          <button onclick="app.closeModal('receipt-modal')" class="modal-close-btn">&times;</button>
+        </div>
+      </div>
+      <div class="receipt-print-wrapper" id="receipt-print-content">
+        <!-- Receipt Content generated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: DEMAND LETTER INVOICE PREVIEW -->
+  <!-- ========================================== -->
+  <div id="demand-letter-modal" class="modal-overlay hidden">
+    <div class="modal-card receipt-preview-card glass">
+      <div class="modal-header hide-on-print">
+        <h3><i class="fa-solid fa-file-invoice-dollar text-primary"></i> Demand Letter Invoice</h3>
+        <div>
+          <button onclick="window.print()" class="btn btn-sm btn-outline mr-2"><i class="fa-solid fa-print"></i> Print</button>
+          <button onclick="app.closeModal('demand-letter-modal')" class="modal-close-btn">&times;</button>
+        </div>
+      </div>
+      <div class="receipt-print-wrapper" id="demand-letter-print-content">
+        <!-- Demand invoice printable content generated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Scripts -->
+  <script src="src/js/api.js"></script>
+  <script src="src/js/app.js"></script>
+  <script src="src/js/dashboard.js"></script>
+  <script src="src/js/customer.js"></script>
+  <script src="src/js/unit.js"></script>
+  <script src="src/js/payments.js"></script>
+  <script src="src/js/construction.js"></script>
+  <script src="src/js/reports.js"></script>
+  <script src="src/js/demands.js"></script>
+</body>
+</html>
